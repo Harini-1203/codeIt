@@ -1,0 +1,17 @@
+# Ignore virtual environment directories
+myenv/
+venv/
+.env/
+
+# Ignore Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore other common files
+*.log
+*.sqlite3
+*.db
+
+# Ignore node_modules directory
+node_modules/

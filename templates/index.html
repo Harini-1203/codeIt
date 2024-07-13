@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeIt</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #chat-container {
+            border: 1px solid #f3f3f3;
+            border-radius: 10px;
+            width: 1200px;
+            height: 89vh;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background: rgb(246, 250, 248);
+        }
+
+        #chat {
+            height: 80vh;
+            padding: 50px 100px;
+            overflow-y: scroll;
+            box-sizing: border-box;
+        }
+
+        img {
+            height: 200px;
+            width: 200px;
+            border-radius: 50%;
+
+        }
+
+        #chat p {
+            margin: 0 0 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background: #e0e0e0;
+        }
+
+        #input-container {
+            display: flex;
+            margin-bottom: 30px;
+        }
+
+        #input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            width: 70%;
+            margin-left: 100px;
+            border-bottom-left-radius: 10px;
+
+        }
+
+        h1 {
+            padding-top: 60px;
+            width: fit-content;
+        }
+
+        #bot {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        #input:focus {
+            outline: none;
+        }
+
+        #send {
+            padding: 10px 20px;
+            margin-right: 100px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-top-right-radius: 10px;
+            cursor: pointer;
+        }
+
+        #send:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="bot">
+        <img src="{{ url_for('static', filename='images/logo-color.png') }}" alt="Logo">
+        <h1>Welcome to CodeIt</h1>
+    </div>
+    <div id="chat-container">
+        <div id="chat"></div>
+        <div id="input-container">
+            <input type="text" id="input" placeholder="Type your message...">
+            <button id="send">Send</button>
+        </div>
+    </div>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        const socket = io('http://127.0.0.1:5000');
+        const chat = document.getElementById('chat');
+        const input = document.getElementById('input');
+        const sendButton = document.getElementById('send');
+
+        function sendMessage() {
+            const message = input.value.trim();
+            if (message) {
+                socket.send(message);
+                input.value = '';
+            }
+        }
+
+        input.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        sendButton.addEventListener('click', sendMessage);
+
+        socket.on('response', function (msg) {
+            const p = document.createElement('p');
+            p.innerText = msg;
+            chat.appendChild(p);
+            chat.scrollTop = chat.scrollHeight;
+        });
+    </script>
+</body>
+
+</html>
